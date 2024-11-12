@@ -176,7 +176,7 @@ class _MainHomeState extends State<MainHome> {
                   'https://image.tmdb.org/t/p/w200/${ShowMovies[index].img}'),
               fit: BoxFit.fill,
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
       ],
