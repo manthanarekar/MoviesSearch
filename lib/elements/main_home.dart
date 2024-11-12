@@ -22,14 +22,14 @@ class _MainHomeState extends State<MainHome> {
   @override
   void initState() {
     super.initState();
-    MyController.addListener(_onSearchChanged); // Attach listener here
+    MyController.addListener(_onSearchChanged);
   }
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () async {
+    _debounce = Timer(const Duration(milliseconds: 200), () async {
       await SearchQuery().fetchMovieData(MyController.text);
-      setState(() {}); // Trigger UI update after API call
+      setState(() {});
     });
   }
 
@@ -49,7 +49,7 @@ class _MainHomeState extends State<MainHome> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HeadText(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           TextField(
             controller: MyController,
             decoration: InputDecoration(
@@ -87,9 +87,8 @@ class _MainHomeState extends State<MainHome> {
                     ? PopularMoviesGetData.popularMovies
                     : SearchQuery.SearchQureyData;
 
-                // Check if index is valid before accessing the list
                 if (index >= ShowMovies.length) {
-                  return const SizedBox(); // Return an empty container if index is out of range
+                  return const SizedBox();
                 }
 
                 try {
@@ -99,7 +98,7 @@ class _MainHomeState extends State<MainHome> {
                   );
                 } catch (e) {
                   print('Error occurred while building the list item: $e');
-                  return const SizedBox(); // Return an empty container in case of error
+                  return const SizedBox();
                 }
               },
             ),
@@ -133,14 +132,20 @@ class _MainHomeState extends State<MainHome> {
               Padding(
                 padding: const EdgeInsets.only(left: 170),
                 child: SizedBox(
-                  width: 240,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TitleText(ShowMovies[index].name),
+                        Row(
+                          children: [
+                            SizedBox(
+                                height: 30,
+                                width: 210,
+                                child: TitleText(ShowMovies[index].name)),
+                          ],
+                        ),
                         const SizedBox(height: 5),
                         GenresText(ShowMovies[index].genres),
                         const SizedBox(height: 10),
