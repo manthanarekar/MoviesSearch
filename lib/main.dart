@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:nicc/api/popular_movies.dart';
 import 'package:nicc/colors/colors.dart';
 import 'package:nicc/elements/main_home.dart';
@@ -17,11 +18,24 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isLoading = true;
+  bool isConnected = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchMovies();
+    _checkConnectionAndFetchMovies();
+  }
+
+  Future<void> _checkConnectionAndFetchMovies() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        isConnected = false;
+        isLoading = false;
+      });
+    } else {
+      await _fetchMovies();
+    }
   }
 
   Future<void> _fetchMovies() async {
@@ -42,13 +56,25 @@ class _HomeState extends State<Home> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-            backgroundColor: AppColors.Grey,
-            elevation: 0,
-            title: Center(child: HeadText('MoviesRating'))),
+          title: Center(child: HeadText('MoviesRating')),
+          backgroundColor: AppColors.Grey,
+          elevation: 0,
+        ),
         backgroundColor: AppColors.Grey,
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : const MainHome(),
+            : isConnected
+                ? const MainHome()
+                : const Center(
+                    child: Text(
+                      'No Internet Connection',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
       ),
     );
   }
