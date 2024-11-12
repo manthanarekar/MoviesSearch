@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
             backgroundColor: AppColors.Grey,
             elevation: 0,
-            title: HeadText('MoviesRating')),
+            title: Center(child: HeadText('MoviesRating'))),
         backgroundColor: AppColors.Grey,
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
