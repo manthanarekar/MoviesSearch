@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:nicc/api/popular_movies.dart';
 import 'package:nicc/colors/colors.dart';
 import 'package:nicc/elements/main_home.dart';
+import 'package:nicc/widget/text_fields.dart';
 
-void main() async {
-  await PopularMoviesGetData().fetchNowPlayingMovies();
-  runApp(Home());
+void main() {
+  runApp(const Home());
 }
 
 class Home extends StatefulWidget {
@@ -16,15 +16,39 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMovies();
+  }
+
+  Future<void> _fetchMovies() async {
+    try {
+      await PopularMoviesGetData().fetchNowPlayingMovies();
+    } catch (e) {
+      print("Error fetching movies: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenwidth = MediaQuery.of(context).size.width;
-    print(screenwidth);
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(
+            backgroundColor: AppColors.Grey,
+            elevation: 0,
+            title: HeadText('MoviesRating')),
         backgroundColor: AppColors.Grey,
-        body: MainHome(),
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : const MainHome(),
       ),
     );
   }

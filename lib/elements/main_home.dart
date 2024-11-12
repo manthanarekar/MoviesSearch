@@ -22,6 +22,7 @@ class _MainHomeState extends State<MainHome> {
   @override
   void initState() {
     super.initState();
+
     MyController.addListener(_onSearchChanged);
   }
 
@@ -44,11 +45,11 @@ class _MainHomeState extends State<MainHome> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 25, left: 15, right: 15, bottom: 10),
+      padding: const EdgeInsets.only(top: 10, left: 15, right: 15, bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeadText(),
+          HeadText('Home'),
           const SizedBox(height: 15),
           TextField(
             controller: MyController,
@@ -78,29 +79,33 @@ class _MainHomeState extends State<MainHome> {
           ),
           const SizedBox(height: 20),
           Expanded(
-            child: ListView.builder(
-              itemCount: MyController.text.isEmpty
-                  ? PopularMoviesGetData.popularMovies.length
-                  : SearchQuery.SearchQureyData.length,
-              itemBuilder: (context, index) {
-                List<MoviesData> ShowMovies = MyController.text.isEmpty
-                    ? PopularMoviesGetData.popularMovies
-                    : SearchQuery.SearchQureyData;
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: ListView.builder(
+                itemCount: MyController.text.isEmpty
+                    ? PopularMoviesGetData.popularMovies.length
+                    : SearchQuery.SearchQureyData.length,
+                itemBuilder: (context, index) {
+                  List<MoviesData> ShowMovies = MyController.text.isEmpty
+                      ? PopularMoviesGetData.popularMovies
+                      : SearchQuery.SearchQureyData;
 
-                if (index >= ShowMovies.length) {
-                  return const SizedBox();
-                }
+                  if (index >= ShowMovies.length) {
+                    return const SizedBox();
+                  }
 
-                try {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: DesingCard(index, ShowMovies),
-                  );
-                } catch (e) {
-                  print('Error occurred while building the list item: $e');
-                  return const SizedBox();
-                }
-              },
+                  try {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: DesingCard(index, ShowMovies),
+                    );
+                  } catch (e) {
+                    print('Error occurred while building the list item: $e');
+                    return const SizedBox();
+                  }
+                },
+              ),
             ),
           ),
         ],
@@ -146,7 +151,6 @@ class _MainHomeState extends State<MainHome> {
                                 child: TitleText(ShowMovies[index].name)),
                           ],
                         ),
-                        const SizedBox(height: 5),
                         GenresText(ShowMovies[index].genres),
                         const SizedBox(height: 10),
                         RatingContainer(

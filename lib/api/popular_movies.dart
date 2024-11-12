@@ -34,6 +34,8 @@ class PopularMoviesGetData {
           ));
         }
       }
+    } else {
+      print('Not Geting Output.. PopularMoviesAPi ${response.statusCode}');
     }
   }
 }

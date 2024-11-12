@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nicc/api/genres.dart';
 import 'package:nicc/colors/colors.dart';
 
-Text HeadText() => Text(
-      'Home',
+Text HeadText(String input) => Text(
+      input.toString(),
       style: GoogleFonts.montserrat(
           textStyle: const TextStyle(
               fontSize: 20,
